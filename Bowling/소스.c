@@ -10,12 +10,14 @@ typedef struct Member {
 	int member_num;
 	int game_round;
 	int score;
+	int frameSum;
 }Bowling_crew;
 
 Bowling_crew crew[125] = { NULL };
 int z = 0;
-double average(int a, int b, int c, int d, int e) {
-
+int frame_sum[125] = { 0, };
+double average(int sum) {
+	return (double)(sum) / 5.0;
 }
 int totalsum(int *frame,int frameNum) {
 	int sum = 0;
@@ -34,6 +36,8 @@ int Bowling_Score(int* arr, int data) {
 	int is_strike[10] = { 0, };
 	int is_spare[10] = { 0, };
 	int score;
+	
+	int frame_8_9_10 = 0;
 	for (int i = 0; i < data; i++) {
 		if (j > 9) {
 			break;
@@ -93,7 +97,9 @@ int Bowling_Score(int* arr, int data) {
 		frame[9] += score;
 	}
 	f_score = totalsum(frame, 10);
-
+	
+	frame_8_9_10 = frame[7] + frame[8] + frame[9];
+	crew[z].frameSum = frame_8_9_10;
 	return f_score;
 	
 }
@@ -103,8 +109,8 @@ void Split(char* arr)
 	int member[2];
 	int frame_num[24] = { NULL };
 	int i = 1;
-	
 	int member_score;
+
 	tk = strtok(arr, " \t");
 	
 	member[0] = atoi(tk);
@@ -113,7 +119,7 @@ void Split(char* arr)
 
 	member[1] = atoi(tk);
 	crew[z].game_round = member[1];
-	printf("%d %d\n\n", member[0],member[1]);
+	printf("%d %d\n", member[0],member[1]);
 	tk = strtok(NULL, " \t");
 	while (tk != NULL) {
 		if (atoi(tk) != 10) {
@@ -133,7 +139,7 @@ void Split(char* arr)
 		str[j] = frame_num[j + 1];
 		printf("%d ", str[j]);
 	}
-	
+	printf("\n");
 	printf("최종점수: %d ",  member_score = Bowling_Score(str, i - 1));
 	crew[z].score = member_score;
 	printf("\n");
@@ -143,39 +149,86 @@ void Split(char* arr)
 }
 
 void test() {
-	FILE* fp = fopen("bowling.txt", "r");
+	FILE* fp = fopen("bowling2018.txt", "r");
 	char buf[100] = { NULL };
 	int i = 0;
 	int member,round;
 	int frame[12] = { 0 };
+	Bowling_crew tmp;
+	int x, j;
+	double avg_tmp;
 	while (!feof(fp)) {
 		if (fgets(buf, 100, fp) != NULL) {
-			Split(buf);
+			Split(buf);//데이터 불러온 뒤  점수처리 
+		}
+	}
+	//오름차순정렬(구조체 멤버)
+	for (i = 0; i < 125; i++) {	
+		for (j = 0; j < 124 - i; j++) {
+			if (crew[j].member_num > crew[j + 1].member_num) {
+				tmp = crew[j];
+				crew[j] = crew[j + 1];
+				crew[j + 1] = tmp;
+			}
 		}
 	}
 	
-	int j;
-	int x;
-	for (i = 0; i < 125; i++) {
-		//printf("%d번 선수의 %d라운드 점수: %d\n", crew[i].member_num, crew[i].game_round, crew[i].score);
-		x = 0;
-		for (j = 0; j < i; j++) {
-			if (crew[j].member_num == crew[i].member_num) {
-				x += 1;
-			}
+	
+	int sum;
+	int avg_index = 0;
+	int* memberNum = malloc(sizeof(int) * 25);
+	double* avg = malloc(sizeof(double) * 25);
+	Bowling_crew frameSum_tmp;
+
+	for (i = 0; i < 125; i+=5) {
+		sum = 0;
+		for (j = i; j < i+5; j++) {
+			sum += crew[j].score;
 		}
-		if (x > 0) {
-			continue;
-		}
-		for (j = i + 1; j < 125; j++) {
-			if (crew[j].member_num == crew[i].member_num) {
-				x += 1;
-			}
-		}
-		if (x > 0) printf("%d %d\n", crew[i].member_num, crew[i].game_round);
-		
-		
+		avg[avg_index] = average(sum);
+		memberNum[avg_index] = avg_index + 1;
+		avg_index++;
 	}
+	for (i = 0; i < 125; i++) {
+		for (j = 0; j < 124 - i; j++) {
+			if (crew[j].frameSum > crew[j + 1].frameSum) {
+				frameSum_tmp = crew[j];
+				crew[j] = crew[j + 1];
+				crew[j + 1] = frameSum_tmp;
+			}
+		}
+	}
+	
+	for (i = 0; i < 25; i++) {
+		//printf("%d번의 5게임 평균 : %.1lf\n ", memberNum[i], avg[i]);
+	}
+	int member_tmp;
+	for (i = 0; i < 25; i++) {
+		for (j = 0; j < 24 - i; j++) {
+			if (avg[j] > avg[j + 1]) {
+				avg_tmp = avg[j];
+				avg[j] = avg[j + 1];
+				avg[j + 1] = avg_tmp;
+
+				member_tmp = memberNum[j];
+				memberNum[j] = memberNum[j + 1];
+				memberNum[j + 1] = member_tmp;
+			}
+		}
+	}
+	printf("\n");
+	printf("2) 5게임의 평균 점수가 1, 2, 3위인 멤버고유번호와 점수(소수 첫째자리까지 표시)는 각각 얼마인가?\n");
+	for (i = 24; i > 0; i--) {
+		printf("%d번의 5게임 평균 : %.1lf\n ", memberNum[i], avg[i]);
+	}
+	printf("\n");
+	printf("3) 8, 9, 10 마지막 세 프레임의 점수합계가 가장 높은 것과 낮은 것은 각각 어느 멤버의 몇번째 게임이고, 점수는 얼마인가?\n");
+	for (i = 0; i < 125; i++) {
+		printf("%d번 %d라운드 점수: %d / 8,9,10프레임 합계: %d\n", crew[i].member_num, crew[i].game_round, crew[i].score, crew[i].frameSum);
+	}
+	
+	free(memberNum);
+	free(avg);
 }
 int main() {
 	test();
