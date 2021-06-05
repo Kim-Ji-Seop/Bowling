@@ -229,6 +229,7 @@ void test() {
 	
 	free(memberNum);
 	free(avg);
+	fclose(fp);
 }
 int main() {
 	test();
