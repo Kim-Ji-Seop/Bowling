@@ -10,5 +10,9 @@
         <module name="bowling.bowling.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="bowling.bowling.main~1" target="17" />
+      <module name="bowling.bowling.test~1" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>
