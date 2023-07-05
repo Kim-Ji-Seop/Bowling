@@ -35,6 +35,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        // 회원가입 API는 JWT 토큰이 없어도 접근 가능해야 하므로, 토큰 체크를 건너뛰는 로직 추가
+        if ("/users".equals(request.getRequestURI()) && "POST".equals(request.getMethod())) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         ErrorCode errorCode=null;
         String jwt = getJwtFromRequest(request); //request에서 jwt 토큰을 꺼낸다.

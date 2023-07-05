@@ -1,11 +1,32 @@
 package univ.capston.bowling.domain.user.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import lombok.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import univ.capston.bowling.global.config.security.BaseEntity;
+
+import javax.persistence.*;
 
 @Entity
-public class UserEntity {
-
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@Table(name = "user")
+public class UserEntity extends BaseEntity {
     @Id
-    private Long userIdx;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String uid;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
+    private String nickName;
+
 }

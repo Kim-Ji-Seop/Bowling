@@ -1,7 +1,5 @@
 package univ.capston.bowling.global.config.error;
 
-
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.buf.StringUtils;
 import org.hibernate.exception.ConstraintViolationException;
@@ -18,6 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import univ.capston.bowling.global.config.error.exception.BaseException;
 import univ.capston.bowling.global.config.error.exception.JwtException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.BindException;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -87,7 +86,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<BaseResponse<?>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        return ResponseEntity.badRequest().body(new BaseResponse<>(BAD_REQUEST));
+        BaseResponse<?> response = new BaseResponse<>(BAD_REQUEST);
+        System.out.println(e.getMessage());
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
