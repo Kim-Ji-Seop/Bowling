@@ -23,7 +23,6 @@ public enum ErrorCode {
     EXPIRED_AUTHENTICATION(HttpStatus.UNAUTHORIZED,403,"인증정보가 만료되었습니다."),
     EMAIL_ALREADY_EXIST(HttpStatus.BAD_REQUEST, 500,"이미 존재하는 이메일입니다."),
 
-    INVALID_KAKAO_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED,401,"유효하지 않은 Kakao Access Token입니다."),
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED,403,"인가되지 않은 사용자입니다."),
 
     USER_NOT_EXIST(HttpStatus.NOT_FOUND,404,"존재하지 않는 유저입니다."),

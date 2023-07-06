@@ -36,7 +36,7 @@ public class BaseException extends RuntimeException {
         this.errorMessage = errorMessage;
     }
 
-
+    public ErrorCode getErrorCode() { return errorCode;}
     public int getCode() {
         return code;
     }

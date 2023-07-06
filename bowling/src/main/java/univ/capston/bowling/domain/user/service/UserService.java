@@ -51,7 +51,7 @@ public class UserService {
                 .name(postSignUpReq.getName())
                 .nickName(postSignUpReq.getNickName())
                 .build();
-
+        System.out.println(newUser.toString());
         userRepository.save(newUser);
 
         return new PostSignUpRes(newUser.getId());
