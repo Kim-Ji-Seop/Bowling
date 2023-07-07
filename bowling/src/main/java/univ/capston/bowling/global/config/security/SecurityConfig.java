@@ -1,50 +1,31 @@
 package univ.capston.bowling.global.config.security;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import univ.capston.bowling.global.config.redis.RedisDao;
-import univ.capston.bowling.global.config.security.jwt.JwtAuthenticationEntryPoint;
-import univ.capston.bowling.global.config.security.jwt.JwtAuthenticationFilter;
-import univ.capston.bowling.global.config.security.jwt.JwtTokenProvider;
 
-@Configuration
+@RequiredArgsConstructor
 @EnableWebSecurity
-@AllArgsConstructor
+@Configuration
 public class SecurityConfig {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final RedisDao redisDao;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //jwt 사용
-                .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .authorizeRequests()
-                .antMatchers("*").permitAll()
-                .anyRequest().permitAll()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider,redisDao), UsernamePasswordAuthenticationFilter.class);
+
+        http.csrf().disable();
+        //http.httpBasic().disable(); // 일반적인 루트가 아닌 다른 방식으로 요청시 거절, header에 id, pw가 아닌 token(jwt)을 달고 간다. 그래서 basic이 아닌 bearer를 사용한다.
+        http
+                .authorizeRequests()// 요청에 대한 사용권한 체크
+                .antMatchers("/v3/api-docs/**","/**",
+                        "/swagger-ui/**").permitAll() // 가입 및 인증 주소는 누구나 접근가능
+                .antMatchers("/test").hasAnyRole("USER", "ADMIN")
+                .anyRequest().hasRole("USER") // 그외 나머지 요청은 모두 인증된 회원만 접근 가능
+                .and();
 
         return http.build();
-    }
-
-    @Bean
-    public static PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 }
