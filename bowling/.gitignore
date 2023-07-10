@@ -39,4 +39,4 @@ out/
 ### Deploy & Secret ###
 
 application.yml
-app.properties
+application-dev.yml
