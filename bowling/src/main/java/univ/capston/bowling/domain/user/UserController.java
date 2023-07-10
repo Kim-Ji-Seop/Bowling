@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import univ.capston.bowling.domain.user.dto.PostSignUpReq;
 import univ.capston.bowling.domain.user.dto.PostSignUpRes;
-import univ.capston.bowling.domain.user.dto.service.UserService;
+import univ.capston.bowling.domain.user.service.UserService;
 import univ.capston.bowling.global.config.BaseResponse;
 import univ.capston.bowling.global.config.BaseException;
 import univ.capston.bowling.global.config.BaseResponseStatus;

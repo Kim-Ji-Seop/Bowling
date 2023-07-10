@@ -1,8 +1,8 @@
-package univ.capston.bowling.domain.user.dto.repository;
+package univ.capston.bowling.domain.user.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import univ.capston.bowling.domain.user.dto.entity.UserEntity;
+import univ.capston.bowling.domain.user.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,Long> {

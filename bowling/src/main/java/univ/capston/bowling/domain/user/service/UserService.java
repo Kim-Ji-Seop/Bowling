@@ -1,11 +1,11 @@
-package univ.capston.bowling.domain.user.dto.service;
+package univ.capston.bowling.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import univ.capston.bowling.domain.user.dto.PostSignUpReq;
 import univ.capston.bowling.domain.user.dto.PostSignUpRes;
-import univ.capston.bowling.domain.user.dto.entity.UserEntity;
-import univ.capston.bowling.domain.user.dto.repository.UserRepository;
+import univ.capston.bowling.domain.user.entity.UserEntity;
+import univ.capston.bowling.domain.user.repository.UserRepository;
 import univ.capston.bowling.global.config.BaseException;
 import univ.capston.bowling.global.util.BCrypt;
 

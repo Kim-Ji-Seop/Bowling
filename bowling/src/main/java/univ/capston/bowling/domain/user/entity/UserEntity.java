@@ -1,4 +1,4 @@
-package univ.capston.bowling.domain.user.dto.entity;
+package univ.capston.bowling.domain.user.entity;
 
 import lombok.*;
 import org.springframework.security.core.userdetails.UserDetails;
