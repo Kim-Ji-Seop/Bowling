@@ -15,7 +15,7 @@ import static univ.capston.bowling.global.config.BaseResponseStatus.SUCCESS;
 public class UserController {
     @Value("${spring.profiles.active:}")
     private String activeProfile;
-
+    // 배포...
     @GetMapping("/user")
     public ResponseEntity<BaseResponse> userTest(){
         try{
